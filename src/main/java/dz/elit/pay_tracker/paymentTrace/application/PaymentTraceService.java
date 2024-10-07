@@ -8,6 +8,7 @@ import dz.elit.pay_tracker.paymentTrace.domain.PaymentTrace;
 import dz.elit.pay_tracker.paymentTrace.domain.PaymentTraceRepository;
 import dz.elit.pay_tracker.paymentTrace.exception.PaymentTraceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,14 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentTraceService {
     public final PaymentTraceRepository paymentTraceRepository;
-    private final PaymentTraceMapper paymentTraceMapper;
+    public final PaymentTraceMapper paymentTraceMapper;
 
     @Autowired
     public PaymentTraceService(PaymentTraceRepository paymentTraceRepository, PaymentTraceMapper paymentTraceMapper) {
         this.paymentTraceRepository = paymentTraceRepository;
         this.paymentTraceMapper = paymentTraceMapper;
     }
-
 
     /**
      * Creates a new payment action using the information provided in the specified DTO.
@@ -73,8 +73,8 @@ public class PaymentTraceService {
         try {
             List<PaymentTrace> entities = paymentTraceDTOList.stream()
                     .map(paymentTraceMapper::mapToEntity)
-                    .collect(Collectors.toList());
-            paymentTraceRepository.saveAll(entities);
+                    .toList();
+            entities.forEach(paymentTraceRepository::save);
         } catch (PaymentTraceException e) {
             throw new PaymentTraceException("Failed to save one or more payment actions", e);
         }

@@ -1,6 +1,13 @@
+database:
+  type: postgresql
 spring:
   profiles:
-   active: dev
+    active: postgresql
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/data_tracker
+      #username: myusername
+      #password: mypassword
   application:
     name: pay-tracker
   datasource:
@@ -13,7 +20,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+     # ddl-auto: create
     properties:
       hibernate:
         format_sql: true

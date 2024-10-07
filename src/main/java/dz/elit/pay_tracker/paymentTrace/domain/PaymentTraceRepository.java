@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-@Repository
 public interface PaymentTraceRepository {
     /**
      * create a PaymentTrace .
@@ -13,20 +12,6 @@ public interface PaymentTraceRepository {
      * @return the created  PaymentTrace.
      */
     PaymentTrace save(PaymentTrace paymentTrace);
-    /**
-     * create a list of PaymentTrace .
-     *  @param paymentTraces
-     * @return the created  PaymentTraces.
-     */
-    List<PaymentTrace> saveAll(List<PaymentTrace> paymentTraces);
-
-    /**
-     * update a PaymentTrace .
-     *
-     * @param paymentTrace to update.
-     * @return the updated  PaymentTrace.
-     */
-    PaymentTrace update(PaymentTrace paymentTrace);
 
     /**
      * Retrieves an optional PaymentTrace by its id.
