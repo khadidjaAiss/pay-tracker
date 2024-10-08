@@ -8,7 +8,6 @@ import dz.elit.pay_tracker.paymentTrace.domain.PaymentTrace;
 import dz.elit.pay_tracker.paymentTrace.domain.PaymentTraceRepository;
 import dz.elit.pay_tracker.paymentTrace.exception.PaymentTraceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
