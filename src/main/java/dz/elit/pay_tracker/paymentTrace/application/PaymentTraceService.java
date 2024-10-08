@@ -29,10 +29,10 @@ public class PaymentTraceService {
     }
 
     /**
-     * Creates a new payment action using the information provided in the specified DTO.
+     * Creates a new payment trace using the information provided in the specified DTO.
      *
-     * @param paymentTraceDTO The DTO containing the necessary information to create the payment action.
-     * @throws PaymentTraceException If an error occurs while saving the payment action.
+     * @param paymentTraceDTO The DTO containing the necessary information to create the payment trace.
+     * @throws PaymentTraceException If an error occurs while saving the payment trace.
      */
     @Transactional
     public void createPaymentTrace(CreatePaymentTraceDTO paymentTraceDTO) {
@@ -40,33 +40,33 @@ public class PaymentTraceService {
             PaymentTrace paymentTrace = paymentTraceMapper.mapToEntity(paymentTraceDTO);
             paymentTraceRepository.save(paymentTrace);
         } catch (Exception e) {
-            throw new PaymentTraceException("Failed to save payment action", e);
+            throw new PaymentTraceException("Failed to save payment trace", e);
         }
     }
 
     /**
-     * Updates an existing payment action based on the information provided in the update DTO.
+     * Updates an existing payment trace based on the information provided in the update DTO.
      *
-     * @param updatePaymentTraceDTO The DTO containing the updated information for the payment action.
-     * @throws PaymentTraceException If the payment action with the specified ID is not found, or if an error occurs while updating the payment action.
+     * @param updatePaymentTraceDTO The DTO containing the updated information for the payment trace.
+     * @throws PaymentTraceException If the payment trace with the specified ID is not found, or if an error occurs while updating the payment trace.
      */
     @Transactional
     public void updatePaymentTrace(UpdatePaymentTraceDTO updatePaymentTraceDTO) {
         try {
             PaymentTrace existingPA = paymentTraceRepository.findById(updatePaymentTraceDTO.getId())
-                    .orElseThrow(() -> new PaymentTraceException("Payment action not found with id: " + updatePaymentTraceDTO.getId()));
+                    .orElseThrow(() -> new PaymentTraceException("Payment trace not found with id: " + updatePaymentTraceDTO.getId()));
             paymentTraceMapper.updateEntity(updatePaymentTraceDTO, existingPA);
             paymentTraceRepository.save(existingPA);
         } catch (Exception e) {
-            throw new PaymentTraceException("Failed to update payment action", e);
+            throw new PaymentTraceException("Failed to update payment trace", e);
         }
     }
 
     /**
-     * Creates multiple payment actions based on the information provided in the list of DTOs.
+     * Creates multiple payment traces based on the information provided in the list of DTOs.
      *
-     * @param paymentTraceDTOList The list of DTOs containing the information to create the payment actions.
-     * @throws PaymentTraceException If an error occurs while saving one or more payment actions.
+     * @param paymentTraceDTOList The list of DTOs containing the information to create the payment traces.
+     * @throws PaymentTraceException If an error occurs while saving one or more payment traces.
      */
     @Transactional
     public void createPaymentTraces(List<CreatePaymentTraceDTO> paymentTraceDTOList) {
@@ -76,43 +76,46 @@ public class PaymentTraceService {
                     .toList();
             entities.forEach(paymentTraceRepository::save);
         } catch (PaymentTraceException e) {
-            throw new PaymentTraceException("Failed to save one or more payment actions", e);
+            throw new PaymentTraceException("Failed to save one or more payment traces", e);
         }
     }
 
     /**
-     * updates multiple payment actions based on the information provided in the list of DTOs.
+     * updates multiple payment traces based on the information provided in the list of DTOs.
      *
-     * @param updatePaymentTraceDTOList The list of DTOs containing the information to update the payment actions.
-     * @throws PaymentTraceException If an error occurs while saving one or more payment actions.
+     * @param updatePaymentTraceDTOList The list of DTOs containing the information to update the payment traces.
+     * @throws PaymentTraceException If an error occurs while saving one or more payment traces.
      */
     @Transactional
     public void updatePaymentTraces(List<UpdatePaymentTraceDTO> updatePaymentTraceDTOList) {
         try {
             updatePaymentTraceDTOList.forEach(this::updatePaymentTrace);
         } catch (PaymentTraceException e) {
-            throw new PaymentTraceException("Failed to save one or more payment actions", e);
+            throw new PaymentTraceException("Failed to save one or more payment traces", e);
         }
     }
 
     /**
-     * Retrieves payment actions based on the specified search criteria.
+     * Retrieves payment traces based on the specified search criteria.
      *
-     * @param numCheque  The cheque number to search for payment actions.
-     * @param numFacture The invoice number to search for payment actions.
-     * @param numMemoire The memory number to search for payment actions.
-     * @param codeClient The client code to search for payment actions.
+     * @param numCheque  The cheque number to search for payment traces.
+     * @param numFacture The invoice number to search for payment traces.
+     * @param numMemoire The memory number to search for payment traces.
+     * @param numTranche The tranche number to search for payment traces.
+     * @param codeClient The client code to search for payment traces.
      * @return A list of PaymentTraceDTO objects that match the search criteria.
      * @throws IllegalArgumentException If none of the search criteria are provided.
      */
-    public List<PaymentTraceDTO> findPaymentTracesByCriteria(String numCheque, String numFacture, String numMemoire, String codeClient) {
+    public List<PaymentTraceDTO> findPaymentTracesByCriteria(String numCheque, String numFacture, String numMemoire, String numTranche , String codeClient) {
         List<PaymentTrace> list;
         if (numCheque != null) {
             list = paymentTraceRepository.findByNumCheque(numCheque);
         } else if (numFacture != null) {
             list = paymentTraceRepository.findByNumFacture(numFacture);
         } else if (numMemoire != null) {
-            list = paymentTraceRepository.findByNumMemoire(numMemoire);
+            list = paymentTraceRepository.findByNumMemoire(numMemoire); 
+        } else if (numTranche != null) {
+            list = paymentTraceRepository.findByNumTranche(numTranche);
         } else if (codeClient != null) {
             list = paymentTraceRepository.findByCodeClient(codeClient);
         } else {
@@ -123,9 +126,9 @@ public class PaymentTraceService {
     }
 
     /**
-     * Retrieves payment actions based on cheque number .
+     * Retrieves payment traces based on cheque number .
      *
-     * @param numCheque The cheque number to search for payment actions.
+     * @param numCheque The cheque number to search for payment traces.
      * @return A list of PaymentTraceDTO objects that match the search criteria.
      * @throws IllegalArgumentException If none of the search criteria are provided.
      */
@@ -141,9 +144,9 @@ public class PaymentTraceService {
                 .collect(Collectors.toList());
     }
     /**
-     * Retrieves payment actions based on invoice number .
+     * Retrieves payment traces based on invoice number .
      *
-     * @param numFacture The cheque number to search for payment actions.
+     * @param numFacture The cheque number to search for payment traces.
      * @return A list of PaymentTraceDTO objects that match the search criteria.
      * @throws IllegalArgumentException If none of the search criteria are provided.
      */
@@ -157,11 +160,28 @@ public class PaymentTraceService {
                 .stream()
                 .map(paymentTraceMapper::mapToDto)
                 .collect(Collectors.toList());
+    } /**
+     * Retrieves payment traces based on tranche number .
+     *
+     * @param numtranche The cheque number to search for payment traces.
+     * @return A list of PaymentTraceDTO objects that match the search criteria.
+     * @throws IllegalArgumentException If none of the search criteria are provided.
+     */
+    public List<PaymentTraceDTO> findPaymentTracesByNumTranche(String numtranche) {
+        if (numtranche == null) {
+            throw new IllegalArgumentException("At least one search criteria must be provided.");
+        }
+        List<PaymentTrace> list = paymentTraceRepository.findByNumTranche(numtranche);
+        return Optional.ofNullable(list)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(paymentTraceMapper::mapToDto)
+                .collect(Collectors.toList());
     }
     /**
-     * Retrieves payment actions based on memory number .
+     * Retrieves payment traces based on memory number .
      *
-     * @param numMemoire The cheque number to search for payment actions.
+     * @param numMemoire The cheque number to search for payment traces.
      * @return A list of PaymentTraceDTO objects that match the search criteria.
      * @throws IllegalArgumentException If none of the search criteria are provided.
      */
@@ -177,9 +197,9 @@ public class PaymentTraceService {
                 .collect(Collectors.toList());
     }
     /**
-     * Retrieves payment actions based on client code .
+     * Retrieves payment traces based on client code .
      *
-     * @param codeClient The cheque number to search for payment actions.
+     * @param codeClient The cheque number to search for payment traces.
      * @return A list of PaymentTraceDTO objects that match the search criteria.
      * @throws IllegalArgumentException If none of the search criteria are provided.
      */

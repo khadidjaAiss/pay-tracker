@@ -11,12 +11,12 @@ spring:
   application:
     name: pay-tracker
   datasource:
-    #url: jdbc:postgresql://10.6.22.201:6010/payment_action
-    #username: admin_role
-    #password: @dm1n_r0le@2023
-    url: jdbc:postgresql://localhost:5432/data_tracker?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://10.6.22.201:6010/bd_gtc
+    username: admin_role
+    password: "@dm1n_r0le@2023"
+    #url: jdbc:postgresql://localhost:5432/data_tracker?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+    #username: postgres
+    #password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -24,10 +24,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        default_schema: action_tracker
+        #default_schema: action_tracker
+        default_schema: sch_commun
     show_sql: true
     open-in-view: false
-  server:
-    port: 9090
-    servlet:
-      context-path: /payTracker
+server:
+  port: 9090
+  servlet:
+    context-path: /payTracker

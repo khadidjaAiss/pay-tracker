@@ -56,28 +56,34 @@ public class PaymentTraceController {
 
     // Endpoint to retrieve payment Traces by cheque number
     @GetMapping("/by-cheque")
-    public ResponseEntity<List<PaymentTraceDTO>> findByCheque(@NotNull(message = "Le numero de cheque ne doit pas être null")@RequestParam String chequeNumber) {
+    public ResponseEntity<List<PaymentTraceDTO>> findByCheque(@NotNull @RequestParam String chequeNumber) {
         List<PaymentTraceDTO> paymentTraceDTOS = paymentTraceService.findPaymentTracesByNumCheque(chequeNumber);
         return new ResponseEntity<>(paymentTraceDTOS, HttpStatus.OK);
     }
 
     // Endpoint to retrieve payment Traces by invoice number
     @GetMapping("/by-invoice")
-    public ResponseEntity<List<PaymentTraceDTO>> findByInvoice(@NotNull(message = "Le numero de facture ne doit pas être null") @RequestParam String invoiceNumber) {
+    public ResponseEntity<List<PaymentTraceDTO>> findByInvoice(@NotNull @RequestParam String invoiceNumber) {
         List<PaymentTraceDTO> paymentTraceDTOS = paymentTraceService.findPaymentTracesByNumFacture(invoiceNumber);
         return new ResponseEntity<>(paymentTraceDTOS, HttpStatus.OK);
     }
 
     // Endpoint to retrieve payment Traces by memory number
     @GetMapping("/by-memory")
-    public ResponseEntity<List<PaymentTraceDTO>> findByMemory(@NotNull(message = "Le numéro de mémoire ne doit pas être null") @RequestParam String memoryNumber) {
+    public ResponseEntity<List<PaymentTraceDTO>> findByMemory(@NotNull @RequestParam String memoryNumber) {
         List<PaymentTraceDTO> paymentTraceDTOS = paymentTraceService.findPaymentTracesByNumMemoire(memoryNumber);
+        return new ResponseEntity<>(paymentTraceDTOS, HttpStatus.OK);
+    }
+    // Endpoint to retrieve payment Traces by tranche number
+    @GetMapping("/by-tranche")
+    public ResponseEntity<List<PaymentTraceDTO>> findByTranche(@NotNull @RequestParam String trancheNumber) {
+        List<PaymentTraceDTO> paymentTraceDTOS = paymentTraceService.findPaymentTracesByNumTranche(trancheNumber);
         return new ResponseEntity<>(paymentTraceDTOS, HttpStatus.OK);
     }
 
     // Endpoint to retrieve payment Traces by client code
     @GetMapping("/by-client-code")
-    public ResponseEntity<List<PaymentTraceDTO>> findByClientCode(@NotNull(message = "Le code client ne doit pas être null") @RequestParam String clientCode) {
+    public ResponseEntity<List<PaymentTraceDTO>> findByClientCode(@NotNull @RequestParam String clientCode) {
         List<PaymentTraceDTO> paymentTraceDTOS = paymentTraceService.findPaymentTracesByCodeClient(clientCode);
         return new ResponseEntity<>(paymentTraceDTOS, HttpStatus.OK);
     }
@@ -88,8 +94,9 @@ public class PaymentTraceController {
             @RequestParam(required = false) String chequeNumber,
             @RequestParam(required = false) String invoiceNumber,
             @RequestParam(required = false) String memoryNumber,
+            @RequestParam(required = false) String trancheNumber,
             @RequestParam(required = false) String clientCode) {
-        List<PaymentTraceDTO> products = paymentTraceService.findPaymentTracesByCriteria(chequeNumber, invoiceNumber, memoryNumber, clientCode);
+        List<PaymentTraceDTO> products = paymentTraceService.findPaymentTracesByCriteria(chequeNumber, invoiceNumber, memoryNumber, trancheNumber, clientCode);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

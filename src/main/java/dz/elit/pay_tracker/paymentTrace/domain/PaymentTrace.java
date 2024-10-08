@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "payment_trace")
+@Table(name = "commun_paiement" , schema = "sch_commun")
 public class PaymentTrace implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +19,13 @@ public class PaymentTrace implements Serializable {
     private Integer id;
     @Column(name = "code_action", nullable = false)
     private String codeAction;
-    @Column(name = "numero_facture")
+    @Column(name = "num_facture")
     private String numFacture;
-    @Column(name = "numero_tranche")
+    @Column(name = "num_tranche")
     private String numTranche;
-    @Column(name = "numero_memoire")
+    @Column(name = "num_memoire")
     private String numMemoire;
-    @Column(name = "numero_cheque")
+    @Column(name = "num_cheque")
     private String numCheque;
     @Column(name = "rip")
     private String rip;
