@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handleMissingParams(MissingServletRequestParameterException ex) {
         System.err.println(ex.getParameterName());
-        String message = ex.getParameterName().isEmpty()?"Un paramètre requis est manquant.": String.format("Le paramètre requis %s est manquant.", ex.getParameterName());
+        String message = ex.getParameterName().isEmpty()?"A required parameter is missing.": String.format("The required parameter %s is missing .", ex.getParameterName());
         return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

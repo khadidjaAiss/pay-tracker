@@ -4,6 +4,7 @@ import dz.elit.pay_tracker.paymentTrace.application.PaymentTraceService;
 import dz.elit.pay_tracker.paymentTrace.application.dto.CreatePaymentTraceDTO;
 import dz.elit.pay_tracker.paymentTrace.application.dto.PaymentTraceDTO;
 import dz.elit.pay_tracker.paymentTrace.application.dto.UpdatePaymentTraceDTO;
+import dz.elit.pay_tracker.paymentTrace.exception.PaymentTraceException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,12 @@ public class PaymentTraceController {
     // Endpoint to create a payment Trace
     @PostMapping
     public ResponseEntity<String> create(@NotNull @Validated @RequestBody CreatePaymentTraceDTO paymentTraceDTO) {
+        try {
         paymentTraceService.createPaymentTrace(paymentTraceDTO);
         return new ResponseEntity<>("Payment Trace saved successfully", HttpStatus.OK);
+    } catch (PaymentTraceException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
     }
 
     // Endpoint to create multiple payment Traces

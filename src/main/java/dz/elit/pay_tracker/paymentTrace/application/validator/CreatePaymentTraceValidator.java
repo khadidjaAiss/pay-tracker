@@ -30,6 +30,7 @@ public class CreatePaymentTraceValidator implements ConstraintValidator<ValidCre
         boolean numMemoireNull = dto.getNumMemoire() == null;
         boolean numChequeNull = dto.getNumCheque() == null;
         boolean ripNull = dto.getRip() == null;
+        boolean codeActionNull= dto.getCodeAction()== null;
 
             // Check if all three fields are null
         if (numFactureNull && numTrancheNull && numMemoireNull) {
@@ -50,9 +51,15 @@ public class CreatePaymentTraceValidator implements ConstraintValidator<ValidCre
                     .addConstraintViolation();
             isValid = false;
         }
+        if (codeActionNull ) {
+            context.buildConstraintViolationWithTemplate("the actionCode  must be provided ")
+                    .addConstraintViolation();
+            isValid = false;
+        }
 
         // Réinitialiser le contexte de violation pour éviter les doublons de message
         context.disableDefaultConstraintViolation();
         return isValid;
     }
+
 }

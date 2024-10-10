@@ -4,6 +4,8 @@ import dz.elit.pay_tracker.paymentTrace.application.dto.CreatePaymentTraceDTO;
 import dz.elit.pay_tracker.paymentTrace.application.dto.PaymentTraceDTO;
 import dz.elit.pay_tracker.paymentTrace.application.dto.PaymentTraceMapper;
 import dz.elit.pay_tracker.paymentTrace.application.dto.UpdatePaymentTraceDTO;
+import dz.elit.pay_tracker.paymentTrace.domain.PaymentActionAutomate;
+import dz.elit.pay_tracker.paymentTrace.domain.PaymentActionAutomateRepository;
 import dz.elit.pay_tracker.paymentTrace.domain.PaymentTrace;
 import dz.elit.pay_tracker.paymentTrace.domain.PaymentTraceRepository;
 import dz.elit.pay_tracker.paymentTrace.exception.PaymentTraceException;
@@ -19,11 +21,13 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentTraceService {
     public final PaymentTraceRepository paymentTraceRepository;
+    public final PaymentActionAutomateRepository paymentActionAutomateRepository;
     public final PaymentTraceMapper paymentTraceMapper;
 
     @Autowired
-    public PaymentTraceService(PaymentTraceRepository paymentTraceRepository, PaymentTraceMapper paymentTraceMapper) {
+    public PaymentTraceService(PaymentTraceRepository paymentTraceRepository, PaymentActionAutomateRepository paymentActionAutomateRepository, PaymentTraceMapper paymentTraceMapper) {
         this.paymentTraceRepository = paymentTraceRepository;
+        this.paymentActionAutomateRepository = paymentActionAutomateRepository;
         this.paymentTraceMapper = paymentTraceMapper;
     }
 
@@ -36,12 +40,33 @@ public class PaymentTraceService {
     @Transactional
     public void createPaymentTrace(CreatePaymentTraceDTO paymentTraceDTO) {
         try {
+            verifyPaymentTrace(paymentTraceDTO);
             PaymentTrace paymentTrace = paymentTraceMapper.mapToEntity(paymentTraceDTO);
             paymentTraceRepository.save(paymentTrace);
         } catch (Exception e) {
             throw new PaymentTraceException("Failed to save payment trace", e);
         }
     }
+    public void verifyPaymentTrace(CreatePaymentTraceDTO paymentTraceDTO) throws PaymentTraceException {
+        Optional<PaymentActionAutomate> byCodeAction = paymentActionAutomateRepository.findByCodeAction(paymentTraceDTO.getCodeAction());
+        if (byCodeAction.isEmpty()) {
+            throw new PaymentTraceException("Opération Synchronisation /  Le Code Action " + paymentTraceDTO.getCodeAction() + "  est non reconnu pour la synchronisation temps réel CRMS!");
+        } else {
+        // Vérification si l'action précédente existe dans la table automate
+        if (!paymentActionAutomateRepository.existsByAction(previousAction)) {
+            throw new InvalidPaymentTraceException("Previous action '" + previousAction + "' not found in automate!");
+        }
+
+        // Si tout est valide, sauvegarder le PaymentTrace
+        PaymentTrace paymentTrace = new PaymentTrace(paymentTraceDTO);
+        paymentTraceRepository.save(paymentTrace);
+    }
+  /*  @Transactional
+    public void verifyAndSavePaymentTraces(List<CreatePaymentTraceDTO> paymentTraceDTOs) throws InvalidPaymentTraceException {
+        for (CreatePaymentTraceDTO paymentTraceDTO : paymentTraceDTOs) {
+            verifyAndSavePaymentTrace(paymentTraceDTO);
+        }
+    }*/
 
     /**
      * Updates an existing payment trace based on the information provided in the update DTO.
