@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableJpaRepositories(basePackages = "dz.elit.pay_tracker.paymentTrace.infrastructure.persistence.jpa")
-@EnableMongoRepositories(basePackages = "dz.elit.pay_tracker.paymentTrace.infrastructure.persistence.mongoDB")
+//@EnableMongoRepositories(basePackages = "dz.elit.pay_tracker.paymentTrace.infrastructure.persistence.mongoDB")
 public class RepositoryConfig {
 //    @Value("${database.type}")
 //    private String databaseType;

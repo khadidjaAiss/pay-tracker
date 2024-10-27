@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Table(name = "ctc_automate_synchronisation", schema = "sch_ctc")
+@Table(name = "ctc_automate_synchronisation", schema = "sch_commun")
 @Data
 @NoArgsConstructor
+@Entity
 public class PaymentActionAutomate implements Serializable {
 
         private static final long serialVersionUID = 1L;

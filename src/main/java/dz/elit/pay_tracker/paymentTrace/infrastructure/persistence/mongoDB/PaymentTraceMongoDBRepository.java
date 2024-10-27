@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
-@Profile("mongodb")
-public interface PaymentTraceMongoDBRepository extends PaymentTraceRepository,MongoRepository<PaymentTrace, Integer> {
+//@Profile("mongodb")
+public interface PaymentTraceMongoDBRepository
+        //extends PaymentTraceRepository,MongoRepository<PaymentTrace, Integer>
+{
 
     List<PaymentTrace> findByNumFacture(String numFacture);
 
